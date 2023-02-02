@@ -8,9 +8,16 @@
     "post-update": "yarn upgrade --latest"
   },
   "dependencies": {
+    "@rainbow-me/rainbowkit": "^0.8.1",
+    "@rainbow-me/rainbowkit-siwe-next-auth": "^0.1.5",
+    "@supabase/auth-helpers-nextjs": "^0.5.4",
+    "@supabase/auth-helpers-react": "^0.3.1",
+    "ethers": "^5.7.2",
     "next": "latest",
-    "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "next-auth": "^4.19.2",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "wagmi": "^0.11.3"
   },
   "license": "MIT",
   "keywords": [
