@@ -66,13 +66,7 @@ export default function Account() {
     }
   }
 
-  async function updateProfile({
-    beername,
-    email,
-    beertitle,
-    fullname,
-    provider,
-  }) {
+  async function updateProfile({ beername, email, beertitle, fullname }) {
     try {
       setLoading(true);
 
@@ -140,20 +134,14 @@ export default function Account() {
       </div>
       <div>
         <label htmlFor="provider">Provider</label>
-        <input
-          id="provider"
-          type="text"
-          value={provider || ""}
-          onChange={(e) => setProvider(e.target.value)}
-          disabled
-        />
+        <input id="provider" type="text" value={provider || ""} disabled />
       </div>
 
       <div>
         <button
           className="button primary block"
           onClick={() =>
-            updateProfile({ beername, email, beertitle, fullname, provider })
+            updateProfile({ beername, email, beertitle, fullname })
           }
           disabled={loading}
         >
