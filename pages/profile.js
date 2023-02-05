@@ -1,51 +1,51 @@
 import ProfileUpdate from "../components/profileupdate";
-import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-//import {  } from "ethers/lib/utils.js";
 
-import { useAccount, useConnect } from "wagmi";
-import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
+//import {  } from "ethers/lib/utils.js";
 
 import Link from "next/link";
 
-export default function Profile() {
-  const { status, isDisconnected } = useAccount();
-  const router = useRouter();
+import { getSession } from "next-auth/react";
+import { getToken } from "next-auth/jwt";
+import React from "react";
 
-  useEffect(() => {
-    if (status == "disconnected") {
-      //auth is initialized and there is no user
+export const getServerSideProps = async (context) => {
+  const session = await getSession(context);
+  const token = await getToken({ req: context.req });
+  const address = token?.sub ?? null;
 
-      router.push("/");
-    }
-  }, [isDisconnected, router]);
-
-  return (
-    <>
-      <div>{status}</div>
-      <div>
-        <ProfileUpdate />
-      </div>
-      <div>
-        <Link href="/">HOME</Link>
-      </div>
-    </>
-  );
-}
-//  return null;
-
-{
-  /*export async function getServerSideProps() {
-  const { isDisconnected } = useAccount();
-  if (isDisconnected) {
+  // If you have a value for "address" here, your
+  // server knows the user is authenticated.
+  // You can then pass any data you want
+  // to the page component here.
+  if (!address)
     return {
       redirect: {
         destination: "/",
         permanent: false,
       },
-      props: {},
     };
-  }
-}
-*/
+  return {
+    props: {
+      address,
+      session,
+    },
+  };
+};
+export default function AuthenticatedPage({ address }) {
+  return address ? (
+    <>
+      <div>
+        <h1>Authenticated as {address}</h1>
+        <ProfileUpdate />
+        <Link href="/">Home</Link>
+      </div>
+    </>
+  ) : (
+    <>
+      <div>
+        <h1>Unauthenticated</h1>
+        <Link href="/">Home</Link>
+      </div>
+    </>
+  );
 }

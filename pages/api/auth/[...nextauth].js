@@ -78,6 +78,7 @@ export function getAuthOptions(req) {
 export default async function auth(req, res) {
   const authOptions = getAuthOptions(req);
 
+  
   if (!Array.isArray(req.query.nextauth)) {
     res.status(400).send("Bad request");
     return;
@@ -94,3 +95,4 @@ export default async function auth(req, res) {
 
   return await NextAuth(req, res, authOptions);
 }
+

@@ -4,6 +4,7 @@ import { useAccount, useConnect } from "wagmi";
 
 import { getServerSession } from "next-auth";
 import { getAuthOptions } from "./api/auth/[...nextauth]";
+import Modal from "../components/modal";
 
 export const getServerSideProps = async ({ req, res }) => {
   return {
@@ -14,32 +15,34 @@ export const getServerSideProps = async ({ req, res }) => {
 };
 
 export default function IndexPage() {
-  const { address, isDisconnected } = useAccount();
+  const { address, isDisconnected, status } = useAccount();
   return (
     <>
+      <div>Hello World- {status}.</div>
       <div>
-        Hello World. <Link href="/about">About</Link>
+        <Link href="/about">About</Link>
       </div>
-      <div>
-        Rainbow.{" "}
-        {isDisconnected ? (
-          <Button />
-        ) : (
-          <>
-            {" "}
+      {status == "connected" ? (
+        <>
+          <div>
             <Link href="/profile" address={address}>
               Profile {address}
             </Link>
             <Button />
-          </>
-        )}
-      </div>
+            <div>
+              <Modal address={address} />
+            </div>
 
-      <div>
-        <Link href="/protected" address={address}>
-          Protected Page
-        </Link>
-      </div>
+            <div>
+              <Link href="/protected" address={address}>
+                Protected Page
+              </Link>
+            </div>
+          </div>
+        </>
+      ) : (
+        <Button />
+      )}
     </>
   );
 }

@@ -1,6 +1,7 @@
 import { getSession } from "next-auth/react";
 import { getToken } from "next-auth/jwt";
 import React from "react";
+import Link from "next/link";
 
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);
@@ -22,6 +23,9 @@ export default function AuthenticatedPage({ address }) {
   return address ? (
     <h1>Authenticated as {address}</h1>
   ) : (
-    <h1>Unauthenticated</h1>
+    <div>
+      <h1>Unauthenticated</h1>
+      <Link href="/">Home</Link>
+    </div>
   );
 }

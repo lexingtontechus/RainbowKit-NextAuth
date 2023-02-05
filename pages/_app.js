@@ -1,4 +1,6 @@
 //import "../styles/global.css";
+import { NextUIProvider } from '@nextui-org/react';
+
 import "@rainbow-me/rainbowkit/styles.css";
 import {
   RainbowKitProvider,
@@ -154,7 +156,9 @@ export default function App({ Component, pageProps }) {
                 overlayBlur: "small",
               })}
             >
+               <NextUIProvider>
               <Component {...pageProps} />
+               </NextUIProvider>
             </RainbowKitProvider>
           </RainbowKitSiweNextAuthProvider>
         </SessionProvider>
