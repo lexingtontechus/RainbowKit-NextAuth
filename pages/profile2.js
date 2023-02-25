@@ -1,8 +1,12 @@
+import ProfileUpdate from "../components/profileupdate";
+
+//import {  } from "ethers/lib/utils.js";
+
+import Link from "next/link";
+
 import { getSession } from "next-auth/react";
 import { getToken } from "next-auth/jwt";
 import React from "react";
-import Link from "next/link";
-import { Container } from "@nextui-org/react";
 
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);
@@ -13,6 +17,13 @@ export const getServerSideProps = async (context) => {
   // server knows the user is authenticated.
   // You can then pass any data you want
   // to the page component here.
+  if (!address)
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
   return {
     props: {
       address,
@@ -22,14 +33,19 @@ export const getServerSideProps = async (context) => {
 };
 export default function AuthenticatedPage({ address }) {
   return address ? (
-    <Container>
-      <Link href="/">Home</Link>
-      <h1>Authenticated as {address}</h1>
-    </Container>
+    <>
+      <div>
+        <h1>Authenticated as {address}</h1>
+        <ProfileUpdate />
+        <Link href="/">Home</Link>
+      </div>
+    </>
   ) : (
-    <Container>
-      <Link href="/">Home</Link>
-      <h1>Unauthenticated</h1>
-    </Container>
+    <>
+      <div>
+        <h1>Unauthenticated</h1>
+        <Link href="/">Home</Link>
+      </div>
+    </>
   );
 }

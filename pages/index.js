@@ -1,48 +1,73 @@
+"use client";
 import Link from "next/link";
-import Button from "../components/button";
+import { Grid, Container, Text } from "@nextui-org/react";
+
 import { useAccount, useConnect } from "wagmi";
 
-import { getServerSession } from "next-auth";
-import { getAuthOptions } from "./api/auth/[...nextauth]";
-import Modal from "../components/modal";
-
-export const getServerSideProps = async ({ req, res }) => {
-  return {
-    props: {
-      session: await getServerSession(req, res, getAuthOptions(req)),
-    },
-  };
-};
+import ProfileModal from "../components/profilemodal";
+import Header from "../components/header";
+import { useState, useEffect } from "react";
+import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 
 export default function IndexPage() {
-  const { address, isDisconnected, status } = useAccount();
+  const { supabase } = useSupabaseClient();
+  const user = useUser();
+  const { status, address, connector: activeConnector } = useAccount();
+  const { connectors } = useConnect();
+
+  const [data, setData] = useState();
+
+  useEffect(() => {
+    async function loadData() {
+      const { data } = await supabase
+        .from("user")
+        .select("*")
+        .eq("walletaddress", address);
+      setData(data);
+      if (!data) {
+        await supabase.from("users").insert({
+          walletaddress: address,
+        });
+      }
+    }
+    // Only run query once user is logged in.
+    if (user) loadData();
+  }, [user]);
+
   return (
     <>
-      <div>Hello World- {status}.</div>
-      <div>
-        <Link href="/about">About</Link>
-      </div>
-      {status == "connected" ? (
-        <>
-          <div>
-            <Link href="/profile" address={address}>
-              Profile {address}
-            </Link>
-            <Button />
-            <div>
-              <Modal address={address} />
-            </div>
-
+      <Container>
+        <Header />
+        <h1>4 Mo Beers</h1>
+        <h2>Rainbow Kit w/NextAuth</h2>
+        <Grid.Container gap={8} justify="center">
+          <Grid lg>
+            <div>Wallet Status: {status}</div>
             <div>
               <Link href="/protected" address={address}>
-                Protected Page
+                Verify Authenticated Status
               </Link>
             </div>
-          </div>
-        </>
-      ) : (
-        <Button />
-      )}
+          </Grid>
+          <Grid lg>
+            {status == "connected" ? (
+              <>
+                <div>
+                  <Link href="/profile" address={address}>
+                    Profile {address}
+                  </Link>
+
+                  <div>
+                    <ProfileModal address={address} />
+                  </div>
+                </div>
+              </>
+            ) : (
+              <></>
+            )}
+          </Grid>
+        </Grid.Container>
+      </Container>
     </>
   );
 }

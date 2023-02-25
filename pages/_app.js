@@ -1,5 +1,6 @@
 //import "../styles/global.css";
-import { NextUIProvider } from '@nextui-org/react';
+import { createTheme, NextUIProvider } from "@nextui-org/react";
+import UDconnector from "../components/udconnector";
 
 import "@rainbow-me/rainbowkit/styles.css";
 import {
@@ -18,7 +19,6 @@ import {
   coinbaseWallet,
   walletConnectWallet,
   braveWallet,
-  wallet,
 } from "@rainbow-me/rainbowkit/wallets";
 
 import { SessionProvider } from "next-auth/react";
@@ -41,28 +41,7 @@ import { publicProvider } from "wagmi/providers/public";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import { useState } from "react";
-{
-  /*
-const uauth = new UAuth({
-  clientID: "814a3502-e259-4972-9e2f-e0d5fe9482d8",
-  redirectUri: "https://localhost:3000/",
-  scope: "openid wallet email:optional",
-  shouldLoginWithRedirect: false,
 
-  qrcodeModalOptions: {
-    mobileLinks: [
-      "rainbow",
-      "metamask",
-      "argent",
-      "trust",
-      "imtoken",
-      "pillar",
-    ],
-  },
-  connectFirstChainId: true,
-});
-*/
-}
 const { chains, provider, webSocketProvider } = configureChains(
   [
     mainnet,
@@ -91,6 +70,7 @@ const connectors = connectorsForWallets([
     wallets: [
       injectedWallet({ chains }),
       braveWallet({ chains }),
+      // uauth({ chains }),
       //wallet.brave({ chains, shimDisconnect: true }),
       //metaMaskWallet({ chains }),
       //rainbowWallet({ chains }),
@@ -109,7 +89,7 @@ const connectors = connectorsForWallets([
 ]);
 
 const wagmiClient = createClient({
-  autoConnect: true,
+  autoConnect: false,
   connectors,
   provider,
   webSocketProvider,
@@ -126,6 +106,74 @@ const Disclaimer = ({ Text, Link }) => (
 
 const getSiweMessageOptions = () => ({
   statement: "Sign in to 4MoBeers DAO",
+});
+
+//RainbowKit Theme
+const myRainbowTheme = {
+  blurs: {
+    modalOverlay: "",
+  },
+  colors: {
+    accentColor: "#18181b",
+    accentColorForeground: "#f4f4f5",
+    actionButtonBorder: "#a855f7",
+    actionButtonBorderMobile: "#a855f7",
+    actionButtonSecondaryBackground: "",
+    closeButton: "",
+    closeButtonBackground: "",
+    connectButtonBackground: "",
+    connectButtonBackgroundError: "",
+    connectButtonInnerBackground: "",
+    connectButtonText: "#18181b",
+    connectButtonTextError: "",
+    connectionIndicator: "",
+    downloadBottomCardBackground: "",
+    downloadTopCardBackground: "",
+    error: "",
+    generalBorder: "#a855f7",
+    generalBorderDim: "#a855f7",
+    menuItemBackground: "",
+    modalBackdrop: "",
+    modalBackground: "#18181b",
+    modalBorder: "",
+    modalText: "#f4f4f5",
+    modalTextDim: "#71717a",
+    modalTextSecondary: "",
+    profileAction: "",
+    profileActionHover: "",
+    profileForeground: "",
+    selectedOptionBorder: "",
+    standby: "",
+  },
+  fonts: {
+    body: "",
+  },
+  radii: {
+    actionButton: "",
+    connectButton: "",
+    menuButton: "",
+    modal: "",
+    modalMobile: "",
+  },
+  shadows: {
+    connectButton: "true",
+    dialog: "",
+    profileDetailsAction: "",
+    selectedOption: "",
+    selectedWallet: "",
+    walletLogo: "",
+  },
+};
+//NEXTUI Theme
+const theme = createTheme({
+  type: "dark", // it could be "light" or "dark"
+  theme: {
+    colors: {
+      primary: "#4ADE7B",
+      secondary: "#F9CB80",
+      error: "#FCC5D8",
+    },
+  },
 });
 
 //function MyApp({ Component, pageProps }) {
@@ -148,17 +196,32 @@ export default function App({ Component, pageProps }) {
                 disclaimer: Disclaimer,
               }}
               chains={chains}
+              //theme={myRainbowTheme}
               theme={darkTheme({
-                accentColor: "#581c87",
+                accentColor: "#7e22ce",
                 accentColorForeground: "#f4f4f5",
-                borderRadius: "small",
-                fontStack: "Sora",
+                actionButtonBorder: "#2563eb",
+                borderRadius: "medium",
+                connectButtonBackground: "#581c87",
+                generalBorder: "#a855f7",
+                generalBorderDim: "#a855f7",
+                fontStack: "rounded",
                 overlayBlur: "small",
+                connectButtonBackground: "#a855f7",
+                modalBackground: "#18181b",
+                shadows: {
+                  connectButton: "#dc2626",
+                  dialog: "#dc2626",
+                  profileDetailsAction: "#dc2626",
+                  selectedOption: "#dc2626",
+                  selectedWallet: "#dc2626",
+                  walletLogo: "#dc2626",
+                },
               })}
             >
-               <NextUIProvider>
-              <Component {...pageProps} />
-               </NextUIProvider>
+              <NextUIProvider theme={theme}>
+                <Component {...pageProps} />
+              </NextUIProvider>
             </RainbowKitProvider>
           </RainbowKitSiweNextAuthProvider>
         </SessionProvider>
