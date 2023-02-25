@@ -38,29 +38,33 @@ export default function IndexPage() {
     <>
       <Container>
         <Header />
-        <h1>4 Mo Beers</h1>
-        <h2>Rainbow Kit w/NextAuth</h2>
+        <Text
+          h1
+          size={60}
+          css={{
+            textGradient: "45deg, $blue600 -20%, $pink600 50%",
+          }}
+          weight="bold"
+        >
+          4 Mo Beers
+        </Text>
+        <Text h2>Rainbow Kit w/NextAuth</Text>
         <Grid.Container gap={8} justify="center">
           <Grid lg>
-            <div>Wallet Status: {status}</div>
-            <div>
-              <Link href="/protected" address={address}>
-                Verify Authenticated Status
-              </Link>
-            </div>
+            <Text>Wallet Status: {status}</Text>
           </Grid>
           <Grid lg>
             {status == "connected" ? (
               <>
-                <div>
+                <Text>
                   <Link href="/profile" address={address}>
                     Profile {address}
                   </Link>
 
-                  <div>
+                  <Text>
                     <ProfileModal address={address} />
-                  </div>
-                </div>
+                  </Text>
+                </Text>
               </>
             ) : (
               <></>

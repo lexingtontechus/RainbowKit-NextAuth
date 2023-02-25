@@ -1,6 +1,6 @@
 //import "../styles/global.css";
 import { createTheme, NextUIProvider } from "@nextui-org/react";
-import UDconnector from "../components/udconnector";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
 
 import "@rainbow-me/rainbowkit/styles.css";
 import {
@@ -27,13 +27,6 @@ import {
   GetSiweMessageOptions,
 } from "@rainbow-me/rainbowkit-siwe-next-auth";
 
-//import { initializeConnector } from "@web3-react/core";
-//import UAuth from "@uauth/js";
-//import { MetaMask } from "@web3-react/metamask";
-//import { UAuthConnector } from "@uauth/web3-react";
-//import uauthBNCModule from "@uauth/web3-onboard";
-//import Onboard from "@web3-onboard/core";
-//import uauthModule from "@web3-onboard/uauth";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { mainnet, polygon, optimism, arbitrum, goerli } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
@@ -165,14 +158,17 @@ const myRainbowTheme = {
   },
 };
 //NEXTUI Theme
-const theme = createTheme({
-  type: "dark", // it could be "light" or "dark"
+const daydrunk = createTheme({
+  type: "light",
   theme: {
-    colors: {
-      primary: "#4ADE7B",
-      secondary: "#F9CB80",
-      error: "#FCC5D8",
-    },
+    colors: { background: "#60a5fa", text: "#581c87" }, // optional
+  },
+});
+
+const nightdrunk = createTheme({
+  type: "dark",
+  theme: {
+    colors: { background: "#18181b", text: "#db2777" }, // optional
   },
 });
 
@@ -219,9 +215,18 @@ export default function App({ Component, pageProps }) {
                 },
               })}
             >
-              <NextUIProvider theme={theme}>
-                <Component {...pageProps} />
-              </NextUIProvider>
+              <NextThemesProvider
+                defaultTheme="system"
+                attribute="class"
+                value={{
+                  light: daydrunk.className,
+                  dark: nightdrunk.className,
+                }}
+              >
+                <NextUIProvider>
+                  <Component {...pageProps} />
+                </NextUIProvider>
+              </NextThemesProvider>
             </RainbowKitProvider>
           </RainbowKitSiweNextAuthProvider>
         </SessionProvider>
