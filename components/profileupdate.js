@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
-import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useAccount, useConnect } from "wagmi";
-
-import Button from "./button";
 
 export default function Account() {
   const { address, connector: activeConnector } = useAccount();
 
-  const wa = { address };
-
+  //const wa = { address };
+  const wc = activeConnector.name;
   const supabase = useSupabaseClient();
   //const user = useUser();
 
@@ -24,9 +22,9 @@ export default function Account() {
 
   useEffect(() => {
     getProfile();
-  }, [address]);
+  }, [wc]);
 
-  async function getProfile(wa) {
+  async function getProfile() {
     try {
       setLoading(true);
 
@@ -41,9 +39,11 @@ export default function Account() {
       }
       if (!data) {
         setProvider(activeConnector.name);
+        //const provider = setProvider;
+
         await supabase
           .from("users")
-          .insert({ walletaddress: address, provider: provider })
+          .insert({ walletaddress: address, provider: wc })
           .single();
       }
 
@@ -76,7 +76,7 @@ export default function Account() {
         email,
         beertitle,
         fullname,
-        provider,
+
         updated_at: new Date().toISOString(),
       };
 
@@ -95,7 +95,8 @@ export default function Account() {
     <div className="form-widget">
       <div>{address}</div>
       <div>{uuid}</div>
-      <div>{activeConnector.name}</div>
+      <div>Provider {wc}</div>
+      <div>Active Connector {activeConnector.name}</div>
       <div>
         <label htmlFor="email">Email</label>
         <input
@@ -133,7 +134,9 @@ export default function Account() {
         />
       </div>
       <div>
-        <label htmlFor="provider">Provider</label>
+        <label htmlFor="provider">
+          Provider {activeConnector.name} {wc}
+        </label>
         <input id="provider" type="text" value={provider || ""} disabled />
       </div>
 
@@ -147,10 +150,6 @@ export default function Account() {
         >
           {loading ? "Loading ..." : "Update"}
         </button>
-      </div>
-
-      <div>
-        <Button />
       </div>
     </div>
   );

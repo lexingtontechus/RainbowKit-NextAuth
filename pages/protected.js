@@ -1,6 +1,8 @@
 import { getSession } from "next-auth/react";
 import { getToken } from "next-auth/jwt";
 import React from "react";
+import Link from "next/link";
+import { Container } from "@nextui-org/react";
 
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);
@@ -20,8 +22,14 @@ export const getServerSideProps = async (context) => {
 };
 export default function AuthenticatedPage({ address }) {
   return address ? (
-    <h1>Authenticated as {address}</h1>
+    <Container>
+      <Link href="/">Home</Link>
+      <h1>Authenticated as {address}</h1>
+    </Container>
   ) : (
-    <h1>Unauthenticated</h1>
+    <Container>
+      <Link href="/">Home</Link>
+      <h1>Unauthenticated</h1>
+    </Container>
   );
 }
