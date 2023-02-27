@@ -11,12 +11,12 @@ export default function Header() {
   const { isDark } = useTheme();
 
   return (
-    <Navbar isBordered variant="floating" borderWeight="bold">
+    <Navbar>
       <Navbar.Brand>
         <Logo />
       </Navbar.Brand>
       <Navbar.Content>
-        <Navbar.Item placement="bottom-right">
+        <Navbar.Item placement="bottom-center">
           <ConnectButton
             label="CONNECT"
             showBalance={false}

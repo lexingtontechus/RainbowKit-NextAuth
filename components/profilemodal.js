@@ -10,7 +10,7 @@ export default function ModalLogin({ address }) {
   };
   const { setVisible, bindings } = useModal();
   return (
-    <div className="bg-gradient-to-r from-trueBlue-500 to-truePink-600">
+    <div>
       <Button auto ripple animated bordered color="gradient" onPress={handler}>
         PROFILE
       </Button>
