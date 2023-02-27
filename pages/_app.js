@@ -161,7 +161,7 @@ const myRainbowTheme = {
 const daydrunk = createTheme({
   type: "light",
   theme: {
-    colors: { background: "#60a5fa", text: "#581c87" }, // optional
+    colors: { background: "#2563eb", text: "#581c87" }, // optional
   },
 });
 

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useAccount, useConnect } from "wagmi";
 
-export default function Button() {
+export const RainbowButton = () => {
   const { supabase } = useSupabaseClient();
   const { status, address, connector: activeConnector } = useAccount();
   const { connect, connectors, error, isLoading, pendingConnector } =
@@ -11,9 +11,9 @@ export default function Button() {
   const walletconnector = { activeConnector };
 
   useEffect(() => {
-    checkProfile();
+    if (address) checkProfile();
   });
-  async function checkProfile(address) {
+  async function checkProfile() {
     if (status == "isconnected") {
       //auth is initialized and there is no user
       let { data, error, status } = await supabase
@@ -23,8 +23,9 @@ export default function Button() {
         .single();
 
       if (!data) {
-         await supabase.from("users").insert({
+        await supabase.from("users").insert({
           walletaddress: address,
+          provider: walletconnector,
         });
       }
       if (res.error) {
@@ -35,33 +36,18 @@ export default function Button() {
       }
     }
   }
-
   return (
-    <>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          color: "#fff000",
-          bordercolor: "#d97706",
-        }}
-      ></div>
-      <div>
-        <ConnectButton
-          label="CONNECT WALLET"
-          chainStatus="none"
-          accountStatus={{
-            smallScreen: "full",
-            largeScreen: "full",
-          }}
-          showBalance={{
-            smallScreen: false,
-            largeScreen: true,
-          }}
-        />
-      </div>
-
-      {walletconnector.name}
-    </>
+    <ConnectButton
+      label="CONNECT WALLET"
+      chainStatus="none"
+      accountStatus={{
+        smallScreen: "full",
+        largeScreen: "full",
+      }}
+      showBalance={{
+        smallScreen: false,
+        largeScreen: true,
+      }}
+    />
   );
-}
+};
